@@ -1,4 +1,19 @@
-expenses = []
+import json
+import os
+
+FILE_NAME = "expenses.json"
+
+def load_expenses():
+    if os.path.exists(FILE_NAME):
+        with open(FILE_NAME, "r") as file:
+            return json.load(file)
+    return []
+
+def save_expenses(expenses):
+    with open(FILE_NAME, "w") as file:
+        json.dump(expenses, file, indent=4)
+
+expenses = load_expenses()
 
 while True:
     print("\n===== Expense Tracker =====")
@@ -11,7 +26,15 @@ while True:
     if choice == "1":
         name = input("Expense Name: ")
         amount = float(input("Amount: ₹"))
-        expenses.append((name, amount))
+
+        expense = {
+            "name": name,
+            "amount": amount
+        }
+
+        expenses.append(expense)
+        save_expenses(expenses)
+
         print("Expense Added Successfully!")
 
     elif choice == "2":
@@ -20,14 +43,14 @@ while True:
         if not expenses:
             print("No expenses found.")
 
-        for name, amount in expenses:
-            print(f"{name}: ₹{amount}")
-            total += amount
+        for expense in expenses:
+            print(f"{expense['name']}: ₹{expense['amount']}")
+            total += expense["amount"]
 
         print(f"\nTotal Spending: ₹{total}")
 
     elif choice == "3":
-        print("Thank you for using Expense Tracker!")
+        print("Data Saved Successfully!")
         break
 
     else:
